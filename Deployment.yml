@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: url-deployment
+  labels:
+    app: url
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: url
+  template:
+    metadata:
+      labels:
+        app: url
+    spec:
+      containers:
+      - name: url
+        image: sitabjcdocker/url-shortner
+        ports:
+        - containerPort: 3000
