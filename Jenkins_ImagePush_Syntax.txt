@@ -1,0 +1,29 @@
+pipeline {
+    agent any 
+    
+    stages{
+        stage('Code'){
+            steps{
+                git url: 'https://github.com/sitchatt/URL-Shortner.git', branch: 'main' 
+            }
+        }
+        stage('Build'){
+            steps{
+                sh 'docker build . -t sitabjadocker/url-shortner:latest'
+            }
+        }
+        stage('Push'){
+            steps{
+                withCredentials([usernamePassword(credentialsId: 'DockerHub', passwordVariable: 'DockerHubPassword', usernameVariable: 'DockerHubUser')]) {
+        	     sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
+                 sh 'docker push sitabjadocker/url-shortner:latest'
+                }
+            }
+        }
+        stage('Deploy'){
+            steps{
+                echo "Deploying"
+            }
+        }
+    }
+}
